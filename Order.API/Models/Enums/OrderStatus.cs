@@ -4,6 +4,9 @@
     {
         Completed,
         Suspend,
-        Failed
+        Failed,
+        Invoiced,
+        CargoTransferred,
+        Delivered
     }
 }

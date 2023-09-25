@@ -5,6 +5,7 @@ using Shared;
 using Shared.Events.Order;
 using Shared.Events.Stock;
 using Shared.Messages.Order;
+using Stock.API.Models.Entities;
 using Stock.API.Services;
 
 namespace Stock.API.Consumers
@@ -17,9 +18,9 @@ namespace Stock.API.Consumers
 
         readonly IPublishEndpoint _publishEndpoint;
 
-        public OrderCreatedEventConsumer(IMongoCollection<Models.Entities.Stock> stockColletion, ISendEndpointProvider sendEndpointProvider = null, IPublishEndpoint publishEndpoint = null)
+        public OrderCreatedEventConsumer(MongoDBService mongoDBService, ISendEndpointProvider sendEndpointProvider, IPublishEndpoint publishEndpoint)
         {
-            _stockColletion = stockColletion;
+            _stockColletion = mongoDBService.GetCollection<Stock.API.Models.Entities.Stock>(); ;
             _sendEndpointProvider = sendEndpointProvider;
             _publishEndpoint = publishEndpoint;
         }
@@ -69,7 +70,7 @@ namespace Stock.API.Consumers
                     Message = "Stock Yetersiz"
                 };
 
-               await  _publishEndpoint.Publish(stockNotReservedEvent);
+                await _publishEndpoint.Publish(stockNotReservedEvent);
 
                 Console.WriteLine("Stok Başarısız");
             }
